@@ -107,10 +107,25 @@
 
     @media (max-width: 768px) {
       .logo-img {
-        height: 55px; /* Ajuste para mobile no header */
+        height: 48px; /* Ajuste para mobile no header */
       }
       .hdr-in {
-        padding: 0 20px; /* Menos padding lateral no mobile */
+        padding: 0 10px; /* Menos padding lateral no mobile */
+      }
+      .cart-btn {
+        padding: 8px 12px; /* Botão do carrinho mais compacto */
+        gap: 8px;
+      }
+      #cart-label {
+        display: none; /* Esconder a palavra Carrinho no mobile */
+      }
+      #cart-total-hdr {
+        font-size: 0.85rem;
+      }
+      .admin-header-btn {
+        margin-left: 4px; /* Diminuir margem */
+        width: 38px;
+        height: 38px;
       }
     }
 
