@@ -2332,9 +2332,18 @@
         gap: 12px;
       }
       
-      .sgrid, .stats-orders {
+      .stats-orders {
         grid-template-columns: 1fr 1fr !important;
         gap: 8px !important;
+      }
+      .banner-list-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        display: grid;
+        gap: 20px;
+      }
+      @media(max-width: 768px) {
+        .banner-list-grid { grid-template-columns: 1fr !important; }
+        .sgrid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
       }
       
       .sbox, .so-box {
@@ -2506,24 +2515,232 @@
       padding: 10px;
     }
 
-    /* ══ TOAST NOTIFICATIONS ══ */
+    /* ─── AGE VERIFICATION MODAL ─── */
+    #age-verification {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(15px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: all 0.5s ease;
+    }
+    #age-verification.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.1);
+    }
+    .age-card {
+      background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(10,10,10,0.95));
+      border: 1px solid rgba(126, 200, 37, 0.3);
+      padding: 50px 40px;
+      border-radius: 24px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(126, 200, 37, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .age-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 3.5rem;
+      color: #fff;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .age-text {
+      color: var(--mu);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+    .age-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .age-btn {
+      padding: 18px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .btn-yes {
+      background: var(--grn);
+      color: #000;
+      box-shadow: 0 4px 15px rgba(126, 200, 37, 0.3);
+    }
+    .btn-yes:hover {
+      background: #8ed62e;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(126, 200, 37, 0.4);
+    }
+    .btn-no {
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-no:hover {
+      background: rgba(255,0,0,0.1);
+      border-color: var(--red);
+      color: var(--red);
+    }
+    .age-warning {
+      font-size: 0.8rem;
+      color: var(--mu);
+      letter-spacing: 3px;
+      font-weight: 800;
+      opacity: 0.5;
+      margin-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 25px;
+    }
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(126, 200, 37, 0.1);
+      border-top: 3px solid var(--grn);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ══ HERO BANNER SLIDER ══ */
+    .hero-slider {
+      position: relative;
+      height: 500px;
+      width: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    @media (max-width: 768px) {
+      .hero-slider {
+        height: 400px;
+      }
+    }
+
+    .slider-container {
+      display: flex;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    .slide {
+      flex: 0 0 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .slide-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .slider-nav {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .nav-dot.active {
+      background: var(--grn);
+      width: 30px;
+      border-radius: 5px;
+    }
+
+    .slider-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s;
+      opacity: 0;
+    }
+
+    .hero-slider:hover .slider-arrow {
+      opacity: 1;
+    }
+
+    .slider-arrow:hover {
+      background: var(--accent);
+      border-color: var(--grn);
+    }
+
+    .arrow-prev { left: 20px; }
+    .arrow-next { right: 20px; }
+
+    @media (max-width: 768px) {
+      .slider-arrow { display: none; }
+    }
+    /* ─── TOASTS ─── */
     #toast-container {
       position: fixed;
-      top: 24px;
-      right: 24px;
-      z-index: 9999;
+      bottom: 30px;
+      right: 30px;
+      z-index: 11000;
       display: flex;
       flex-direction: column;
       gap: 12px;
       pointer-events: none;
     }
-
     .toast {
-      background: var(--card);
-      border: 1px solid var(--brd);
+      background: #1a1a1a;
       color: #fff;
       padding: 14px 20px;
       border-radius: 12px;
+      border: 1px solid var(--brd);
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       display: flex;
       align-items: center;
@@ -2531,46 +2748,48 @@
       min-width: 280px;
       max-width: 400px;
       transform: translateX(120%);
-      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      pointer-events: all;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: auto;
+      opacity: 0;
     }
-
-    .toast.show {
-      transform: translateX(0);
-    }
-
+    .toast.show { transform: translateX(0); opacity: 1; }
     .toast.success { border-left: 4px solid var(--grn); }
     .toast.error { border-left: 4px solid var(--red); }
-    .toast.info { border-left: 4px solid var(--acb); }
-
-    .toast-icon {
-      flex-shrink: 0;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-    }
-
-    .toast.success .toast-icon { background: rgba(126, 200, 37, 0.1); color: var(--grn); }
-    .toast.error .toast-icon { background: rgba(255, 95, 95, 0.1); color: var(--red); }
-    .toast.info .toast-icon { background: rgba(90, 158, 20, 0.1); color: var(--acb); }
-
-    .toast-msg {
-      font-size: 0.9rem;
-      font-weight: 500;
-      line-height: 1.4;
-    }
+    .toast.info { border-left: 4px solid var(--accent); }
+    .toast-icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; }
+    .toast-icon.success { color: var(--grn); }
+    .toast-icon.error { color: var(--red); }
+    .toast-icon.info { color: var(--accent); }
+    .toast-msg { font-size: 0.9rem; font-weight: 500; }
   </style>
 </head>
 
 <body>
+  <div id="age-verification">
+    <div class="age-card" id="age-card-content">
+      <div id="age-check-view">
+        <h2 class="age-title">Verificação de Idade</h2>
+        <p class="age-text">Você possui 18 anos ou mais? O acesso a este site é restrito a maiores de idade.</p>
+        <div class="age-btns">
+          <button class="age-btn btn-yes" onclick="verifyAge(true)">Sim, tenho 18+</button>
+          <button class="age-btn btn-no" onclick="verifyAge(false)">Não</button>
+        </div>
+        <div class="age-warning">SE BEBER NÃO DIRIJA</div>
+      </div>
+      
+      <div id="loader" class="hide">
+        <div class="loader-spinner"></div>
+        <p style="color:var(--mu); font-size:0.9rem">Carregando estoque...</p>
+        <div class="age-warning">SE BEBER NÃO DIRIJA</div>
+      </div>
+    </div>
+  </div>
+
   <div id="toast-container"></div>
 
   <!-- ══════════════════════════════════════
      PAGE: CARDÁPIO
-══════════════════════════════════════ -->
+ ══════════════════════════════════════ -->
   <div id="page-cardapio" class="active">
 
     <header class="hdr">
@@ -2600,17 +2819,20 @@
       </div>
     </header>
 
-    <section class="hero">
-      <div class="hero-accent-line"></div>
-      <!-- Large centered logo in hero -->
-      <img src="logo-oficial.png" class="logo-img-footer" alt="Whiskeria do Complexo" style="height: 140px; margin-bottom: 25px;">
-      <h1 class="hero-title">Bebidas de <span class="gr">Alto Nível</span></h1>
-      <div class="hero-sub">A melhor seleção de Whiskys e bebidas destiladas com entrega rápida em toda Salvador–BA.</div>
-      <div>
-        <span id="store-status" class="status-pill s-open">
-          <span class="dot"></span>
-          <span id="store-status-txt">Aberto agora</span>
-        </span>
+    <section class="hero-slider">
+      <div class="slider-container" id="hero-slider-container">
+        <!-- Slides will be injected here -->
+      </div>
+      
+      <div class="slider-arrow arrow-prev" onclick="moveSlider(-1)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </div>
+      <div class="slider-arrow arrow-next" onclick="moveSlider(1)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+      
+      <div class="slider-nav" id="slider-nav">
+        <!-- Dots will be injected here -->
       </div>
     </section>
 
@@ -2721,10 +2943,15 @@
                 <div class="footer-links">
                     <a href="#page-cardapio">Início</a>
                     <a href="#" onclick="openDrawer()">Carrinho</a>
+                    <a href="#" onclick="openSecurityPolicy(event)">Segurança e Privacidade</a>
                     <a href="#" onclick="goAdmin(event)">Painel Admin</a>
                 </div>
             </div>
 
+        </div>
+
+        <div style="text-align:center; padding:20px; border-top:1px solid rgba(255,255,255,0.05); color:var(--red); font-weight:800; font-size:0.9rem; letter-spacing:2px">
+          SE BEBER NÃO DIRIJA | PROIBIDO PARA MENORES DE 18 ANOS
         </div>
         
         <div class="footer-bottom">
@@ -3023,6 +3250,10 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             Categorias
           </button>
+          <button class="side-item" onclick="setTab('banners',this)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            Banners
+          </button>
           <button class="side-item" onclick="setTab('config',this)">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             Configurações
@@ -3204,6 +3435,24 @@
         </div>
         <div id="cat-table" class="cat-list-container"></div>
       </div>
+
+      <!-- BANNERS -->
+      <div id="tab-banners" class="hide">
+        <div class="filter-bar">
+          <div class="ttl bebas">Banners Hero</div>
+          <div class="fbar-right">
+            <button class="gbtn" onclick="openEditBanner()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Novo Banner
+            </button>
+          </div>
+        </div>
+        <div id="banners-table" class="banners-list-container"></div>
+      </div>
       <div id="tab-config" class="hide">
         <div class="ttl bebas" style="margin-bottom:20px">Configurações da Loja</div>
         <div class="cgrid">
@@ -3277,7 +3526,7 @@
       </div>
       <div class="mfoot" style="padding: 20px; border-top: 1px solid var(--brd); display: flex; gap: 10px; justify-content: flex-end;">
         <button class="sbtn" onclick="closeAdminModal()" style="margin: 0; max-width: 120px;">Cancelar</button>
-        <button class="pbtn" id="me-save-btn" onclick="confirmAdminSave()" style="margin: 0; max-width: 160px;">Salvar Alterações</button>
+        <button class="pbtn" id="me-save-btn" style="margin: 0; max-width: 160px;">Salvar Alterações</button>
       </div>
     </div>
   </div>
@@ -3300,10 +3549,14 @@
     let CFG = { taxa: 7.50, wpp: '5571997299203', ig: 'whiskeriadocomplexo', aberta: true, tel: '5571997299203' };
 
     async function fetchData() {
+      const startTime = Date.now();
+      const ageKey = 'whiskeria-age-verified-v2';
+      const wasVerified = !!localStorage.getItem(ageKey);
+      
       const { data: catData } = await _supabase.from('categories').select('*').order('id');
       const { data: subData } = await _supabase.from('subcategories').select('*').order('nome');
       const { data: prodData } = await _supabase.from('products').select('*').order('id');
-      const { data: banData } = await _supabase.from('banners').select('*').eq('active', true).order('order');
+      const { data: banData } = await _supabase.from('banners').select('*').order('sort_order');
       const { data: confData } = await _supabase.from('config').select('*').eq('id', 'singleton').single();
       const { data: orderData } = await _supabase.from('orders').select('*').order('created_at', { ascending: false });
 
@@ -3329,10 +3582,259 @@
       
       updateLogos();
       initCardapio();
-      // renderBanners(); // Removido por solicitação para manter apenas fundo estático
+      renderSlider();
       updateHeaderLinks();
+      
+      // Popup no longer closes automatically. It requires a click.
       if ($('page-admin').classList.contains('active')) renderAdmin();
     }
+
+    /* ─── AGE VERIFICATION ─── */
+    function checkAge() {
+      // We always show the popup now to ensure interaction
+    }
+
+    function verifyAge(verified) {
+      if (verified) {
+        // Show loader briefly to feel like a premium experience
+        $('age-check-view').classList.add('hide');
+        $('loader').classList.remove('hide');
+        
+        setTimeout(() => {
+          $('age-verification').classList.add('hidden');
+        }, 1200);
+      } else {
+        const igLink = `https://instagram.com/${CFG.ig.replace('@', '')}`;
+        window.location.href = igLink;
+      }
+    }
+
+    /* ─── HERO SLIDER ─── */
+    let currentSlide = 0;
+    let sliderInterval;
+
+    function renderSlider() {
+      const container = $('hero-slider-container');
+      const nav = $('slider-nav');
+      const activeBanners = BANNERS.filter(b => b.active);
+      if (!container || activeBanners.length === 0) return;
+      
+      container.innerHTML = activeBanners.map((b, i) => `
+        <div class="slide">
+          <picture>
+            <source media="(max-width: 768px)" srcset="${b.mobile_url || b.image_url}">
+            <img src="${b.image_url}" alt="Banner ${i+1}">
+          </picture>
+          <div class="slide-overlay"></div>
+        </div>
+      `).join('');
+      
+      nav.innerHTML = activeBanners.map((_, i) => `
+        <div class="nav-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>
+      `).join('');
+      
+      startSlider();
+    }
+
+    function moveSlider(step) {
+      const activeBanners = BANNERS.filter(b => b.active);
+      if (activeBanners.length === 0) return;
+      currentSlide = (currentSlide + step + activeBanners.length) % activeBanners.length;
+      updateSlider();
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlider();
+    }
+
+    function updateSlider() {
+      const container = $('hero-slider-container');
+      if (!container) return;
+      container.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      const dots = document.querySelectorAll('.nav-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+      
+      resetSliderInterval();
+    }
+
+    function startSlider() {
+      const activeBanners = BANNERS.filter(b => b.active);
+      if (activeBanners.length === 0) return;
+      sliderInterval = setInterval(() => moveSlider(1), 5000);
+    }
+
+    function resetSliderInterval() {
+      clearInterval(sliderInterval);
+      startSlider();
+    }
+
+    /* ─── ADMIN BANNERS ─── */
+    function renderBannersTable() {
+      const area = $('banners-table');
+      if (!area) return;
+
+      if (BANNERS.length === 0) {
+        area.innerHTML = `<div style="text-align:center; padding:40px; color:var(--mu)">Nenhum banner cadastrado.</div>`;
+        return;
+      }
+
+      area.innerHTML = `
+        <div class="banner-list-grid">
+          ${BANNERS.map(b => `
+            <div class="order-card">
+              <div class="ocard-head" onclick="openEditBanner(${b.id})">
+                <div class="ocard-left">
+                  <div style="display:flex; gap:8px; align-items:center">
+                    <div title="Desktop" style="width:80px; height:45px; background:#111; border:1px solid rgba(255,255,255,0.1); border-radius:6px; overflow:hidden; flex-shrink:0">
+                      <img src="${b.image_url}" style="width:100%; height:100%; object-fit:cover">
+                    </div>
+                    <div title="Mobile" style="width:30px; height:45px; background:#111; border:1px solid rgba(255,255,255,0.1); border-radius:6px; overflow:hidden; flex-shrink:0">
+                      <img src="${b.mobile_url || b.image_url}" style="width:100%; height:100%; object-fit:cover">
+                    </div>
+                  </div>
+                  <div style="margin-left:8px">
+                    <div class="ocard-client">Banner #${b.id}</div>
+                    <div class="ocard-meta">Ordem: ${b.sort_order}</div>
+                  </div>
+                </div>
+                <div class="ocard-right">
+                  <span class="tag ${b.active ? 'tg' : 'tr'}">${b.active ? 'Ativo' : 'Inativo'}</span>
+                  <svg class="ocard-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    let tempBannerWeb = null;
+    let tempBannerMobile = null;
+
+    async function openEditBanner(id = null) {
+      editingType = 'banner';
+      editingId = id;
+      const b = id ? BANNERS.find(x => x.id === id) : { image_url: '', mobile_url: '', active: true, sort_order: 0 };
+      tempBannerWeb = b.image_url || null;
+      tempBannerMobile = b.mobile_url || null;
+
+      const content = `
+        <div class="form-grid" style="margin-bottom:20px">
+          <div class="fg" style="margin:0"><label class="flbl">Ordem de Exibição</label><input class="inp" id="e-ban-order" type="number" value="${b.sort_order}" /></div>
+          <div class="fg" style="margin:0">
+            <label class="flbl">Status do Banner</label>
+            <select class="inp" id="e-ban-active">
+              <option value="true" ${b.active ? 'selected' : ''}>🟢 Ativo (Visível no site)</option>
+              <option value="false" ${!b.active ? 'selected' : ''}>🔴 Inativo (Oculto)</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="cgrid">
+          <div class="ccard" style="margin:0; border-color:rgba(255,255,255,0.05); background: rgba(0,0,0,0.2)">
+            <div class="ctitle" style="font-size:0.8rem; color:var(--grn); display:flex; align-items:center; gap:6px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              VERSÃO DESKTOP
+            </div>
+            <div id="ban-web-preview" style="width:100%; height:120px; background:#000; border:2px dashed var(--brd); border-radius:12px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:12px; transition: all 0.3s">
+              ${tempBannerWeb ? `<img src="${tempBannerWeb}" style="width:100%; height:100%; object-fit:cover">` : '<span style="color:var(--mu); font-size:0.75rem; text-align:center; padding:10px">Clique abaixo para selecionar a imagem Desktop</span>'}
+            </div>
+            <input type="file" id="ban-web-input" hidden accept="image/*" onchange="handleBannerUpload(this.files[0], 'web')">
+            <button class="pbtn" onclick="$('ban-web-input').click()" style="margin:0; width:100%; padding:10px; font-size:0.75rem; text-transform:none; letter-spacing:0">Upload Desktop</button>
+          </div>
+
+          <div class="ccard" style="margin:0; border-color:rgba(255,255,255,0.05); background: rgba(0,0,0,0.2)">
+            <div class="ctitle" style="font-size:0.8rem; color:var(--accent); display:flex; align-items:center; gap:6px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              VERSÃO MOBILE
+            </div>
+            <div id="ban-mobile-preview" style="width:100%; height:120px; background:#000; border:2px dashed var(--brd); border-radius:12px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:12px; transition: all 0.3s">
+              ${tempBannerMobile ? `<img src="${tempBannerMobile}" style="width:100%; height:100%; object-fit:cover">` : '<span style="color:var(--mu); font-size:0.75rem; text-align:center; padding:10px">Opcional (se vazio, usa Desktop)</span>'}
+            </div>
+            <input type="file" id="ban-mobile-input" hidden accept="image/*" onchange="handleBannerUpload(this.files[0], 'mobile')">
+            <button class="sbtn" onclick="$('ban-mobile-input').click()" style="margin:0; width:100%; padding:10px; font-size:0.75rem">Upload Mobile</button>
+          </div>
+        </div>
+      `;
+
+      openAdminModal(id ? 'Editar Banner Hero' : 'Novo Banner Hero', content);
+
+      // Botão de excluir se estiver editando
+      if (id) {
+        const foot = document.querySelector('#modal-edit .mfoot');
+        if (foot) {
+          const delBtn = document.createElement('button');
+          delBtn.className = 'sbtn dyn-del';
+          delBtn.style.color = 'var(--red)';
+          delBtn.style.borderColor = 'rgba(255,95,95,0.3)';
+          delBtn.style.marginRight = 'auto';
+          delBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Excluir Banner';
+          delBtn.onclick = () => deleteBanner(id);
+          foot.prepend(delBtn);
+        }
+      }
+    }
+
+    async function handleBannerUpload(file, type) {
+      if (!file) return;
+      isProcessingImage = true;
+      const saveBtn = $('me-save-btn');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Processando...';
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          if (type === 'web' && w > 1920) { h *= 1920/w; w = 1920; }
+          if (type === 'mobile' && w > 800) { h *= 800/w; w = 800; }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const base64 = canvas.toDataURL('image/webp', 0.8);
+          if (type === 'web') {
+            tempBannerWeb = base64;
+            $('ban-web-preview').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover">`;
+          } else {
+            tempBannerMobile = base64;
+            $('ban-mobile-preview').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover">`;
+          }
+          isProcessingImage = false;
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Salvar Alterações';
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+
+
+    async function deleteBanner(id) {
+      if (!confirm('Deseja realmente excluir este banner?')) return;
+      const { error } = await _supabase.from('banners').delete().eq('id', id);
+      if (!error) {
+        showToast('Banner excluído!');
+        fetchData();
+      } else {
+        showToast('Erro ao excluir banner', 'error');
+      }
+    }
+
+    window.addEventListener('load', () => {
+      checkAge();
+      fetchData();
+    });
 
     /* ─── UTILS ─── */
     function showToast(msg, type = 'success') {
@@ -3347,7 +3849,7 @@
       };
 
       toast.innerHTML = `
-        <div class="toast-icon">${icons[type]}</div>
+        <div class="toast-icon ${type}">${icons[type]}</div>
         <div class="toast-msg">${msg}</div>
       `;
 
@@ -3403,16 +3905,47 @@
     }
     function goAdmin(e) { e.preventDefault(); showPage('admin-login'); }
 
-    /* ─── BANNERS ─── */
-    function renderBanners() {
-      const hero = document.querySelector('.hero');
-      if (!hero || BANNERS.length === 0) return;
+    /* ─── SECURITY & FOOTER ─── */
+    function openSecurityPolicy(e) {
+      if (e) e.preventDefault();
+      const content = `
+        <div style="color:var(--tx); line-height:1.6">
+          <h3 class="bebas" style="font-size:1.5rem; color:var(--grn); margin-bottom:15px">Compromisso com sua Segurança</h3>
+          <p style="margin-bottom:10px">Na <b>Whiskeria do Complexo</b>, levamos sua segurança a sério. Nossas políticas incluem:</p>
+          <ul style="padding-left:20px; margin-bottom:20px">
+            <li><b>Originalidade:</b> Garantimos que 100% dos nossos produtos são originais e adquiridos de fornecedores certificados.</li>
+            <li><b>Manuseio Seguro:</b> Todas as bebidas são armazenadas em local fresco e arejado, seguindo rigorosos padrões de higiene.</li>
+            <li><b>Privacidade:</b> Seus dados de entrega são usados exclusivamente para processar seu pedido e nunca são compartilhados com terceiros.</li>
+            <li><b>Consumo Responsável:</b> Não vendemos para menores de 18 anos e incentivamos o consumo moderado.</li>
+          </ul>
+          <div style="background:rgba(126, 200, 37, 0.1); padding:15px; border-radius:10px; border:1px solid var(--brd)">
+            <p style="font-size:0.85rem; color:var(--mu)">Em caso de dúvidas sobre a procedência de qualquer item, nossa equipe está à disposição para fornecer as informações necessárias via WhatsApp.</p>
+          </div>
+        </div>
+      `;
       
-      const b = BANNERS[0]; // For now using the first one as main hero background
-      // hero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${b.image_url}')`;
-      if (b.title) hero.querySelector('h1').textContent = b.title;
-      if (b.subtitle) hero.querySelector('p').textContent = b.subtitle;
+      openAdminModal('Políticas de Segurança', content);
+      $('me-save-btn').classList.add('hide'); // Hide save button for this view
     }
+
+    function updateFooterLinks() {
+      const waLink = `https://wa.me/${CFG.wpp.replace(/\D/g, '')}`;
+      const igLink = `https://instagram.com/${CFG.ig.replace('@', '')}`;
+      
+      if ($('wa-footer-social')) $('wa-footer-social').href = waLink;
+      if ($('ig-footer-social')) $('ig-footer-social').href = igLink;
+      if ($('loc-wa')) $('loc-wa').href = waLink;
+    }
+
+    function closeAdminModal() {
+      $('modal-edit').classList.remove('show');
+      $('me-save-btn').classList.remove('hide');
+      editingType = null;
+      editingId = null;
+    }
+
+    /* ─── BANNERS ─── */
+    // Dynamic banners are now handled by renderSlider() via fetchData() from Supabase.
 
     /* ─── IMAGE UPLOAD HELPER ─── */
     let tempImageData = null;
@@ -3753,7 +4286,7 @@
         (bairro ? `<div style="margin-top:2px">🏘 ${bairro}${cidade ? ', ' + cidade : ''}</div>` : '') +
         `<div style="margin-top:2px">📮 CEP ${cep}</div>` +
         `<div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--brd)">💳 <b>${selectedPay}</b></div>` +
-        `<div style="margin-top:2px">👤 ${nome} · ${tel}</div>`;
+        `<div style="margin-top:2px">👤 ${nome} | 📱 ${tel}</div>`;
     }
     async function sendWhatsApp() {
       const nome = $('f-nome').value.trim(), tel = $('f-tel').value.trim();
@@ -3838,6 +4371,7 @@
       if (u === 'admin' && p === 'admin123') {
         err.classList.add('hide');
         showPage('admin');
+        renderAdmin();
       } else {
         err.classList.remove('hide');
         // debug helper — remove before production
@@ -3877,7 +4411,7 @@
     }
 
     function setTab(name, btn) {
-      ['dashboard', 'pedidos', 'produtos', 'categorias', 'config'].forEach(t => {
+      ['dashboard', 'pedidos', 'produtos', 'categorias', 'banners', 'config'].forEach(t => {
         const el = $('tab-' + t);
         if (el) el.classList.toggle('hide', t !== name);
       });
@@ -3890,6 +4424,7 @@
         'pedidos': 'Pedidos',
         'produtos': 'Estoque / Produtos',
         'categorias': 'Categorias',
+        'banners': 'Banners Hero',
         'config': 'Configurações'
       };
       if ($('admin-page-title')) $('admin-page-title').textContent = titles[name] || 'Painel';
@@ -3903,19 +4438,26 @@
       if (name === 'pedidos') { initOrdersDates(); renderOrders('todos'); }
       if (name === 'produtos') { initProdFilters(); renderProdTable(); }
       if (name === 'categorias') renderCatTable();
+      if (name === 'banners') renderBannersTable();
+      if (name === 'config') renderConfig();
     }
 
     function renderAdmin() {
-      $('cfg-taxa').value = CFG.taxa; 
-      $('cfg-wpp').value = CFG.wpp; 
-      $('cfg-ig').value = CFG.ig;
-      $('cfg-tel').value = CFG.tel || '';
-      updateAdminToggle();
+      renderConfig();
       initDashDates();
       renderAdminDash();
       initProdFilters();
       renderProdTable();
       renderCatTable();
+      renderBannersTable();
+    }
+
+    function renderConfig() {
+      if ($('cfg-taxa')) $('cfg-taxa').value = CFG.taxa; 
+      if ($('cfg-wpp')) $('cfg-wpp').value = CFG.wpp; 
+      if ($('cfg-ig')) $('cfg-ig').value = CFG.ig;
+      if ($('cfg-tel')) $('cfg-tel').value = CFG.tel || '';
+      updateAdminToggle();
     }
 
     /* ─── DASHBOARD ─── */
@@ -4450,7 +4992,13 @@
     function openAdminModal(title, content) {
       $('me-title').textContent = title;
       $('me-body').innerHTML = content;
-      // Limpa botões dinâmicos (como Excluir) para evitar duplicação
+      
+      const saveBtn = $('me-save-btn');
+      saveBtn.onclick = confirmAdminSave;
+      saveBtn.classList.remove('hide'); 
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Salvar Alterações';
+      
       const foot = document.querySelector('#modal-edit .mfoot');
       if (foot) {
         const dyns = foot.querySelectorAll('.dyn-del');
@@ -4459,11 +5007,6 @@
       $('modal-edit').classList.add('show');
     }
 
-    function closeAdminModal() {
-      $('modal-edit').classList.remove('show');
-      editingType = null;
-      editingId = null;
-    }
 
     function openEditProduct(id = null) {
       editingType = 'produto';
@@ -4742,6 +5285,25 @@
               if (error) throw error;
             }
           }
+        } else if (editingType === 'banner') {
+          const order = parseInt($('e-ban-order').value) || 0;
+          const active = $('e-ban-active').value === 'true';
+          if (!tempBannerWeb) throw new Error('A imagem Desktop é obrigatória.');
+          
+          const val = {
+            image_url: tempBannerWeb,
+            mobile_url: tempBannerMobile,
+            sort_order: order,
+            active
+          };
+
+          let res;
+          if (editingId) {
+            res = await _supabase.from('banners').update(val).eq('id', editingId);
+          } else {
+            res = await _supabase.from('banners').insert([val]);
+          }
+          if (res.error) throw res.error;
         }
         
         closeAdminModal();
