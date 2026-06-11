@@ -5573,11 +5573,13 @@
         return;
       }
 
-      grid.innerHTML = themes.map(t => `
-        <div class="theme-card ${t.active ? 'active-theme' : ''}" id="theme-card-${t.id}">
+      grid.innerHTML = themes.map(t => {
+        const isActive = t.active === true;
+        return `
+        <div class="theme-card ${isActive ? 'active-theme' : ''}" id="theme-card-${t.id}">
           <div class="theme-card-preview" style="background:${t.cor_fundo || '#090a09'}">
             <span style="font-size:2.2rem">${t.emoji || '🎨'}</span>
-            ${t.active ? '<span class="theme-card-badge">✓ Ativo</span>' : ''}
+            ${isActive ? '<span class="theme-card-badge">✓ Ativo</span>' : ''}
           </div>
           <div class="theme-card-info">
             <div class="theme-card-name">${t.nome}</div>
@@ -5587,34 +5589,52 @@
               <div class="theme-swatch" style="background:${t.green_color || t.cor_principal}" title="Destaque"></div>
             </div>
             <div class="theme-toggle-row">
-              <div class="tog ${t.active ? 'on' : ''}" onclick="toggleTheme(${t.id}, ${t.active})"></div>
+              <div class="tog ${isActive ? 'on' : ''}" onclick="toggleTheme(${t.id}, ${isActive})"></div>
               ${!t.is_default ? `<button class="theme-del-btn" onclick="deleteTheme(${t.id})" title="Excluir">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
               </button>` : '<span style="font-size:0.65rem;color:var(--mu)">padrão</span>'}
             </div>
           </div>
         </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     async function toggleTheme(id, currentlyActive) {
-      const newActive = !currentlyActive;
+      // Ensure boolean — values from DB can be null/undefined
+      const isActive = currentlyActive === true || currentlyActive === 'true';
+      const newActive = !isActive;
       try {
-        // Deactivate all themes first
-        await _supabase.from('themes').update({ active: false }).neq('id', -1);
-        // Activate the selected one (if turning on)
+        // Deactivate ALL themes (use gt to match all positive IDs)
+        const { error: deactErr } = await _supabase
+          .from('themes')
+          .update({ active: false })
+          .gt('id', 0);
+        if (deactErr) throw deactErr;
+
         if (newActive) {
-          const { error } = await _supabase.from('themes').update({ active: true }).eq('id', id);
-          if (error) throw error;
-          const { data: theme } = await _supabase.from('themes').select('*').eq('id', id).single();
+          // Activate the selected theme
+          const { error: actErr } = await _supabase
+            .from('themes')
+            .update({ active: true })
+            .eq('id', id);
+          if (actErr) throw actErr;
+
+          const { data: theme } = await _supabase
+            .from('themes')
+            .select('*')
+            .eq('id', id)
+            .single();
           applyThemeToPage(theme);
           showToast(`Tema "${theme.nome}" ativado! 🎨`);
         } else {
           resetTheme();
           showToast('Tema desativado. Cores originais restauradas.');
         }
-        renderThemesTab();
+        // Re-render to reflect new state
+        await renderThemesTab();
       } catch(e) {
+        console.error('toggleTheme error:', e);
         showToast('Erro ao alterar tema.', 'error');
       }
     }
