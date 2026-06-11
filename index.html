@@ -110,7 +110,7 @@
         height: 48px; /* Ajuste para mobile no header */
       }
       .hdr-in {
-        padding: 0 10px; /* Menos padding lateral no mobile */
+        padding: 8px 10px; /* Menos padding lateral no mobile, leve vertical */
       }
       .cart-btn {
         padding: 8px 12px; /* Botão do carrinho mais compacto */
@@ -152,11 +152,24 @@
     .hdr-in {
       max-width: 1400px;
       margin: 0 auto;
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      height: 80px;
+      padding: 12px 40px; /* Padding leve em cima/baixo */
+      min-height: 80px;
+    }
+
+    .hdr-in::before {
+      content: '';
+      display: block;
+    }
+
+    .hdr-in .logo-img {
+      justify-self: center;
+    }
+
+    .hdr-in > div:last-child {
+      justify-self: end;
     }
 
     .cart-btn {
@@ -3181,25 +3194,14 @@
         <div class="lsub">Acesso restrito ao proprietário</div>
         <div class="fg">
           <label class="flbl">Usuário</label>
-          <input class="inp" id="l-user" placeholder="admin" autocomplete="off" />
+          <input class="inp" id="l-user" placeholder="Usuário" autocomplete="off" />
         </div>
         <div class="fg">
           <label class="flbl">Senha</label>
           <div style="position:relative">
-            <input class="inp" id="l-pass" type="text" placeholder="admin123" autocomplete="off"
+            <input class="inp" id="l-pass" type="password" placeholder="Senha" autocomplete="off"
               style="padding-right:42px" onkeydown="if(event.key==='Enter')doLogin()" />
           </div>
-        </div>
-        <div
-          style="background:rgba(43,78,9,.12);border:1px solid rgba(43,78,9,.3);border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:.78rem;color:var(--mu);display:flex;align-items:center;gap:8px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5a9e14" stroke-width="2"
-            stroke-linecap="round">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="16" x2="12" y2="12" />
-            <line x1="12" y1="8" x2="12.01" y2="8" />
-          </svg>
-          Usuário: <strong style="color:var(--tx)">admin</strong> &nbsp;·&nbsp; Senha: <strong
-            style="color:var(--tx)">admin123</strong>
         </div>
         <div class="err-msg hide" id="l-err">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -4364,18 +4366,66 @@
     }
 
     /* ─── ADMIN LOGIN ─── */
-    function doLogin() {
+    async function doLogin() {
       const u = $('l-user').value.trim();
       const p = $('l-pass').value.trim();
       const err = $('l-err');
-      if (u === 'admin' && p === 'admin123') {
-        err.classList.add('hide');
-        showPage('admin');
-        renderAdmin();
-      } else {
+      const btn = document.querySelector('#page-admin-login .pbtn');
+
+      if (!u || !p) {
+        err.innerHTML = `
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          Por favor, preencha todos os campos.
+        `;
         err.classList.remove('hide');
-        // debug helper — remove before production
-        console.log('login attempt:', JSON.stringify(u), JSON.stringify(p));
+        return;
+      }
+
+      try {
+        btn.disabled = true;
+        btn.textContent = 'Autenticando...';
+        err.classList.add('hide');
+
+        const { data: isValid, error } = await _supabase.rpc('check_admin_login', {
+          p_username: u,
+          p_password: p
+        });
+
+        if (error) throw error;
+
+        if (isValid) {
+          err.classList.add('hide');
+          showPage('admin');
+          renderAdmin();
+        } else {
+          err.innerHTML = `
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            Usuário ou senha incorretos.
+          `;
+          err.classList.remove('hide');
+        }
+      } catch (e) {
+        console.error('Login error:', e);
+        err.innerHTML = `
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          Erro ao conectar ao servidor. Tente novamente.
+        `;
+        err.classList.remove('hide');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Entrar';
       }
     }
 
